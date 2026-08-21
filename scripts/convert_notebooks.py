@@ -1045,6 +1045,15 @@ def process_custom_cells(notebook, permalink):
     return notebook
 
 
+def notebook_has_runner_cells(notebook) -> bool:
+    """Return true when the converted page needs CodeMirror runner assets."""
+    runner_keys = ('code_runner', 'ui_runner', 'game_runner')
+    return any(
+        any(key in cell.get('metadata', {}) for key in runner_keys)
+        for cell in notebook.cells
+    )
+
+
 # Function to convert the notebook to Markdown with front matter
 def convert_notebook_to_markdown_with_front_matter(notebook_file):
     """Convert one notebook into markdown and prepend YAML front matter."""
@@ -1059,6 +1068,8 @@ def convert_notebook_to_markdown_with_front_matter(notebook_file):
 
         # Process custom cells (ID assignment + CODE/UI/GAME runner extraction)
         notebook = process_custom_cells(notebook, permalink)
+        if notebook_has_runner_cells(notebook):
+            front_matter['codemirror'] = True
         
         mermaid_graph = MermaidGraph(mermaid_output_directory)
         mermaid_graph.process_cells(notebook)

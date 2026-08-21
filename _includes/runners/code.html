@@ -56,9 +56,72 @@
   </div>
 </div>
 
-<script>
-// AP CSP Pseudocode syntax highlighting mode for CodeMirror 5
-if (typeof CodeMirror !== 'undefined' && !CodeMirror.modes['pseudocode']) {
+<script type="module">
+import { BaseRunner, CodeExecutor, PseudocodeExecutor } from '{{site.baseurl}}/assets/js/pages/runners/index.js';
+import { pythonURI, javaURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
+
+const codeMirrorAssets = {
+  styles: [
+    'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css',
+    'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/darcula.min.css',
+    'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/selection/mark-selection.min.css',
+  ],
+  scripts: [
+    'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/clike/clike.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/selection/mark-selection.min.js',
+  ],
+};
+
+function loadStyleOnce(href) {
+  if (document.querySelector(`link[href="${href}"]`)) return;
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = href;
+  document.head.appendChild(link);
+}
+
+function loadScriptOnce(src) {
+  const existing = document.querySelector(`script[src="${src}"]`);
+  if (existing) {
+    return existing.dataset.loaded === 'true'
+      ? Promise.resolve()
+      : new Promise((resolve, reject) => {
+          existing.addEventListener('load', resolve, { once: true });
+          existing.addEventListener('error', reject, { once: true });
+        });
+  }
+
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = src;
+    script.dataset.runnerAsset = 'codemirror';
+    script.addEventListener('load', () => {
+      script.dataset.loaded = 'true';
+      resolve();
+    }, { once: true });
+    script.addEventListener('error', reject, { once: true });
+    document.head.appendChild(script);
+  });
+}
+
+async function ensureCodeMirror() {
+  codeMirrorAssets.styles.forEach(loadStyleOnce);
+  if (typeof window.CodeMirror !== 'undefined') return window.CodeMirror;
+
+  for (const src of codeMirrorAssets.scripts) {
+    await loadScriptOnce(src);
+  }
+
+  return window.CodeMirror;
+}
+
+function definePseudocodeMode() {
+  if (typeof CodeMirror === 'undefined' || CodeMirror.modes['pseudocode']) return;
+
+  // AP CSP Pseudocode syntax highlighting mode for CodeMirror 5
   CodeMirror.defineMode('pseudocode', function() {
     const KW  = new Set(['IF','ELSE','REPEAT','TIMES','UNTIL','FOR','EACH','IN','PROCEDURE','RETURN','AND','OR','NOT','MOD']);
     const BI  = new Set(['DISPLAY','INPUT','APPEND','INSERT','REMOVE','LENGTH']);
@@ -105,15 +168,17 @@ if (typeof CodeMirror !== 'undefined' && !CodeMirror.modes['pseudocode']) {
     };
   });
 }
-</script>
 
-<script type="module">
-import { BaseRunner, CodeExecutor, PseudocodeExecutor } from '{{site.baseurl}}/assets/js/pages/runners/index.js';
-import { pythonURI, javaURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
-
-(function() {
+(async function() {
   const container = document.getElementById('runner-{{ include.runner_id }}');
   if (!container) return;
+
+  try {
+    await ensureCodeMirror();
+    definePseudocodeMode();
+  } catch (error) {
+    console.warn('Code runner {{ include.runner_id }}: CodeMirror assets failed to load', error);
+  }
   
   const initialLang = "{{ include.language }}";
   const defaultCode = JSON.parse(container.dataset.defaultCode || "\"\"");
@@ -170,13 +235,16 @@ import { pythonURI, javaURI, fetchOptions } from '{{site.baseurl}}/assets/js/api
   // Font size changer
   fontSizeSelect.addEventListener("change", () => {
     const size = fontSizeSelect.value;
-    container.querySelector('.CodeMirror').style.fontSize = size + 'px';
-    editor.refresh();
+    const codeMirrorElement = container.querySelector('.CodeMirror');
+    if (codeMirrorElement) {
+      codeMirrorElement.style.fontSize = size + 'px';
+      editor?.refresh?.();
+    }
   });
 
   // Auto-substitute pseudocode shorthand as the user types
   const pseudoSubs = [['<--','←',3],['!=','≠',2],['>=','≥',2],['<=','≤',2]];
-  editor.on('change', (cm, change) => {
+  editor?.on('change', (cm, change) => {
     if (langSelect.value !== 'pseudocode') return;
     if (change.origin !== '+input') return;
     const cursor = cm.getCursor();
@@ -194,13 +262,13 @@ import { pythonURI, javaURI, fetchOptions } from '{{site.baseurl}}/assets/js/api
   langSelect.addEventListener("change", () => {
     const lang = langSelect.value;
     if (lang === "python") {
-      editor.setOption("mode", "python");
+      editor?.setOption("mode", "python");
     } else if (lang === "java") {
-      editor.setOption("mode", "text/x-java");
+      editor?.setOption("mode", "text/x-java");
     } else if (lang === "javascript") {
-      editor.setOption("mode", "javascript");
+      editor?.setOption("mode", "javascript");
     } else if (lang === "pseudocode") {
-      editor.setOption("mode", "pseudocode");
+      editor?.setOption("mode", "pseudocode");
     }
   });
 
@@ -209,7 +277,7 @@ import { pythonURI, javaURI, fetchOptions } from '{{site.baseurl}}/assets/js/api
   // Run button logic
   function runCode() {
     if (langSelect.value === "pseudocode") {
-      return pseudoExecutor.run(editor.getValue());
+      return pseudoExecutor.run(editor?.getValue?.() || runner.getValue());
     }
     return codeExecutor.run();
   }

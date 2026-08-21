@@ -246,7 +246,7 @@ class CodeRunner:
 
     def liquid_lines(self, code_fence_lines: list[str], code_runner_count: int) -> list[str]:
         """Render Jekyll Liquid captures/includes for embedding the code runner widget."""
-        return [
+        lines = [
             '',
             '{% capture challenge' + str(code_runner_count) + ' %}',
             self.challenge,
@@ -266,9 +266,14 @@ class CodeRunner:
             '   challenge=challenge' + str(code_runner_count),
             '   code=code' + str(code_runner_count),
             '   source=source' + str(code_runner_count),
+        ]
+        if self.options.get('height'):
+            lines.append('   height="' + str(self.options['height']) + '"')
+        lines.extend([
             '%}',
             '',
-        ]
+        ])
+        return lines
 
 
 @dataclass

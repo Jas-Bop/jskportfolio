@@ -30,8 +30,21 @@ export class EditorManager {
     }
 
     const textarea = this.container.querySelector('.editor-textarea');
-    if (!textarea || typeof CodeMirror === 'undefined') {
+    if (!textarea) {
+      console.warn(`Runner ${this.containerId}: editor textarea unavailable`);
+      return null;
+    }
+
+    textarea.value = initialCode || fallbackCode || textarea.value || '';
+
+    if (typeof CodeMirror === 'undefined') {
       console.warn(`Runner ${this.containerId}: CodeMirror editor unavailable`);
+      if (trackChanges && typeof this.onChange === 'function') {
+        textarea.addEventListener('input', () => {
+          this.onChange(textarea.value);
+        });
+        this.onChange(textarea.value);
+      }
       return null;
     }
 

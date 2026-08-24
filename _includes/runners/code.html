@@ -42,7 +42,6 @@
   {% include runners/fragments/editor-container.html
      top_controls=code_runner_top_controls
      bottom_controls=code_runner_bottom_controls
-     initial_code=include.code
   %}
 
   <div class="output-container">
@@ -207,7 +206,6 @@ function definePseudocodeMode() {
   const execTimeSpan = container.querySelector('.execTime');
   const codeExecutor = new CodeExecutor({
     editor,
-    getCode: () => runner.getValue(),
     outputElement: outputDiv,
     execTimeElement: execTimeSpan,
     languageSelect: langSelect,

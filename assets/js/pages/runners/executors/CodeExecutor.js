@@ -1,7 +1,6 @@
 export class CodeExecutor {
-  constructor({ editor, getCode, outputElement, execTimeElement, languageSelect, pythonURI, javaURI, fetchOptions = {} } = {}) {
+  constructor({ editor, outputElement, execTimeElement, languageSelect, pythonURI, javaURI, fetchOptions = {} } = {}) {
     this.editor = editor;
-    this.getCode = getCode;
     this.outputElement = outputElement;
     this.execTimeElement = execTimeElement;
     this.languageSelect = languageSelect;
@@ -12,7 +11,7 @@ export class CodeExecutor {
   }
 
   async run() {
-    const code = this.getCode?.() ?? this.editor?.getValue?.() ?? '';
+    const code = this.editor?.getValue?.() || '';
     const lang = this.languageSelect?.value || 'python';
     const outputDiv = this.outputElement;
     const execTimeSpan = this.execTimeElement;

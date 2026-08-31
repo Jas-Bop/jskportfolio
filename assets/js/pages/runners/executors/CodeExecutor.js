@@ -24,15 +24,12 @@ export class CodeExecutor {
     if (execTimeSpan) execTimeSpan.textContent = '';
 
     const startTime = Date.now();
-
-    if (lang === 'javascript') {
-      this.runJavaScriptFallback(code, startTime);
-      return;
-    }
+    const isLocalhost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 
     let runURL;
     if (lang === 'python') runURL = `${this.pythonURI}/run/python`;
     else if (lang === 'java') runURL = `${this.javaURI}/run/java`;
+    else if (lang === 'javascript') runURL = `${this.pythonURI}/run/javascript`;
     else throw new Error(`Unsupported language: ${lang}`);
 
     const body = JSON.stringify({ code });
@@ -42,18 +39,21 @@ export class CodeExecutor {
       const result = await this.runRemoteCode(runURL, options);
       const output = result.output || '[no output]';
 
+      if (lang === 'javascript' && isLocalhost && output.includes("No such file or directory: 'node'")) {
+        throw new Error('Node.js not available on backend');
+      }
+
       outputDiv.textContent = output;
       if (execTimeSpan) {
         execTimeSpan.textContent = `⏱Execution time: ${Date.now() - startTime}ms`;
       }
     } catch (err) {
-      if (lang === 'python') {
-        await this.runPythonFallback(code, startTime, err);
-        return;
+      if (lang === 'javascript' && isLocalhost) {
+        this.runJavaScriptFallback(code, startTime);
+      } else {
+        outputDiv.textContent = 'Error: ' + err.message;
+        if (execTimeSpan) execTimeSpan.textContent = '';
       }
-
-      outputDiv.textContent = 'Error: ' + err.message;
-      if (execTimeSpan) execTimeSpan.textContent = '';
     }
   }
 

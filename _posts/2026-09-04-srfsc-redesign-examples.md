@@ -19,6 +19,18 @@ author: Krish Kelageri, Jasan Boprai, Shourya Patel
     border: 1px solid rgba(17, 38, 27, 0.08);
   }
 
+  .srfsc-demo,
+  .srfsc-demo p,
+  .srfsc-demo h2,
+  .srfsc-demo h3,
+  .srfsc-demo h4,
+  .srfsc-demo li,
+  .srfsc-demo span,
+  .srfsc-demo strong,
+  .srfsc-demo a:not(.srfsc-btn) {
+    color: #111111 !important;
+  }
+
   .srfsc-demo * { box-sizing: border-box; }
 
   .srfsc-topbar {

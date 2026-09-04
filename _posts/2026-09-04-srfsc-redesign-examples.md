@@ -332,6 +332,32 @@ author: Krish Kelageri, Jasan Boprai, Shourya Patel
     letter-spacing: -0.04em;
   }
 
+  .srfsc-search {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem 0;
+  }
+
+  .srfsc-search input {
+    width: 100%;
+    border: 1px solid rgba(17, 38, 27, 0.15);
+    border-radius: 999px;
+    padding: 0.9rem 1.2rem;
+    font-size: 1rem;
+    background: rgba(255,255,255,0.9);
+    color: #111;
+    box-shadow: 0 6px 18px rgba(19, 41, 18, 0.05);
+  }
+
+  .srfsc-search input:focus {
+    outline: 2px solid rgba(216, 87, 42, 0.25);
+    border-color: rgba(216, 87, 42, 0.5);
+  }
+
+  .srfsc-hidden {
+    display: none !important;
+  }
+
   @media (max-width: 900px) {
     .srfsc-hero-inner,
     .srfsc-grid-3,
@@ -360,14 +386,12 @@ author: Krish Kelageri, Jasan Boprai, Shourya Patel
   <div class="srfsc-topbar">
     <div class="srfsc-brand">SRFSC</div>
     <nav class="srfsc-nav">
-      <a href="#">Home</a>
-      <a href="#">About</a>
-      <a href="#">Programs</a>
-      <a href="#">News</a>
-      <a href="#">Volunteer</a>
-      <a href="#">Donate</a>
+      <a href="{{ '/srfsc-about' | relative_url }}">About</a>
+      <a href="{{ '/news' | relative_url }}">News</a>
+      <a href="{{ '/volunteer' | relative_url }}">Volunteer</a>
+      <a href="{{ '/donate' | relative_url }}">Donate</a>
     </nav>
-    <a class="srfsc-btn" href="#">Join Us</a>
+    <a class="srfsc-btn" href="{{ '/volunteer' | relative_url }}">Join Us</a>
   </div>
 
   <div class="srfsc-hero">
@@ -380,8 +404,8 @@ author: Krish Kelageri, Jasan Boprai, Shourya Patel
           and keep our community prepared year-round.
         </p>
         <div class="srfsc-cta-row">
-          <a class="srfsc-btn" href="#">Volunteer</a>
-          <a class="srfsc-btn secondary" href="#">Donate</a>
+          <a class="srfsc-btn" href="{{ '/volunteer' | relative_url }}">Volunteer</a>
+          <a class="srfsc-btn secondary" href="{{ '/donate' | relative_url }}">Donate</a>
         </div>
       </div>
 
@@ -395,19 +419,19 @@ author: Krish Kelageri, Jasan Boprai, Shourya Patel
 
   <div class="srfsc-section">
     <div class="srfsc-grid-3">
-      <div class="srfsc-card">
+      <div class="srfsc-card" data-search="fuel reduction brush firebreak hazard trees">
         <div class="icon">🔥</div>
         <h3>Fuel Reduction</h3>
         <p>Clear dead brush, remove hazard trees, and protect canyon edges with neighborhood work days.</p>
       </div>
 
-      <div class="srfsc-card">
+      <div class="srfsc-card" data-search="home hardening defensible space fire safety guidance">
         <div class="icon">🏠</div>
         <h3>Home Hardening</h3>
         <p>Help residents prepare their homes with defensible space guidance and practical fire-safety education.</p>
       </div>
 
-      <div class="srfsc-card">
+      <div class="srfsc-card" data-search="community action agency partners neighbors preparedness">
         <div class="icon">🤝</div>
         <h3>Community Action</h3>
         <p>Partner with agencies, local leaders, and neighbors to bring preparedness resources to the whole canyon.</p>
@@ -417,7 +441,7 @@ author: Krish Kelageri, Jasan Boprai, Shourya Patel
 
   <div class="srfsc-section">
     <div class="srfsc-split">
-      <div class="srfsc-panel">
+      <div class="srfsc-panel" data-search="firebreak maintenance hazard tree removal community education cal fire fire rescue partners">
         <h3>Where the work actually happens</h3>
         <ul class="srfsc-list">
           <li><span class="srfsc-bullet"></span><span>Firebreak maintenance along canyon edges and property lines</span></li>
@@ -427,7 +451,7 @@ author: Krish Kelageri, Jasan Boprai, Shourya Patel
         </ul>
       </div>
 
-      <div class="srfsc-alert">
+      <div class="srfsc-alert" data-search="ready to take action volunteer clearing day block meeting next season">
         <strong>Ready to take action?</strong>
         <p>Join a clearing day, host a block meeting, or help the council stay prepared for the next fire season.</p>
       </div>
@@ -437,7 +461,7 @@ author: Krish Kelageri, Jasan Boprai, Shourya Patel
   <div class="srfsc-section">
     <h3 style="margin:0 0 1.25rem; color:#173b2f; font-size:1.7rem;">Latest updates</h3>
     <div class="srfsc-news-grid">
-      <div class="srfsc-news-item">
+      <div class="srfsc-news-item" data-search="news grant hazard tree removal canyon safety">
         <div class="srfsc-news-image"></div>
         <div class="srfsc-news-content">
           <span class="tag">News</span>
@@ -446,7 +470,7 @@ author: Krish Kelageri, Jasan Boprai, Shourya Patel
         </div>
       </div>
 
-      <div class="srfsc-news-item">
+      <div class="srfsc-news-item" data-search="newsletter expo turnout community guidance fire prep">
         <div class="srfsc-news-image" style="background: linear-gradient(135deg, #8f9b75, #d8c29a);"></div>
         <div class="srfsc-news-content">
           <span class="tag">Newsletter</span>
@@ -455,7 +479,7 @@ author: Krish Kelageri, Jasan Boprai, Shourya Patel
         </div>
       </div>
 
-      <div class="srfsc-news-item">
+      <div class="srfsc-news-item" data-search="wildfire california rules home safety zoning">
         <div class="srfsc-news-image" style="background: linear-gradient(135deg, #9d8f73, #e7ddc5);"></div>
         <div class="srfsc-news-content">
           <span class="tag">Wildfire</span>
@@ -468,9 +492,29 @@ author: Krish Kelageri, Jasan Boprai, Shourya Patel
 
   <div class="srfsc-callout">
     <h3>Every firebreak starts with one neighbor showing up.</h3>
-    <a class="srfsc-btn" href="#">Get involved</a>
+    <a class="srfsc-btn" href="{{ '/volunteer' | relative_url }}">Get involved</a>
+  </div>
+
+  <div class="srfsc-search">
+    <input id="srfscSearch" type="text" placeholder="Search programs, news, volunteer, or resources..." aria-label="Search SRFSC content" />
   </div>
 </div>
+
+<script>
+  const searchInput = document.getElementById('srfscSearch');
+  if (searchInput) {
+    searchInput.addEventListener('input', function () {
+      const value = this.value.toLowerCase().trim();
+      const items = document.querySelectorAll('.srfsc-card, .srfsc-panel, .srfsc-alert, .srfsc-news-item');
+
+      items.forEach((item) => {
+        const text = (item.dataset.search || item.textContent || '').toLowerCase();
+        const matches = !value || text.includes(value);
+        item.classList.toggle('srfsc-hidden', !matches);
+      });
+    });
+  }
+</script>
 
 ## How this matches the redesign ideas
 

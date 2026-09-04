@@ -218,7 +218,7 @@ author: Krish Kelageri, Jasan Boprai, Shourya Patel
     align-items: flex-start;
     gap: 0.8rem;
     line-height: 1.5;
-    color: #42584b;
+    color: #1a1a1a;
   }
 
   .srfsc-bullet {
@@ -249,7 +249,7 @@ author: Krish Kelageri, Jasan Boprai, Shourya Patel
   .srfsc-alert p {
     margin: 0;
     line-height: 1.7;
-    color: #2c4939;
+    color: #1a1a1a;
   }
 
   .srfsc-news-grid {
@@ -298,7 +298,7 @@ author: Krish Kelageri, Jasan Boprai, Shourya Patel
   .srfsc-news-content p {
     margin: 0;
     line-height: 1.6;
-    color: #4d6158;
+    color: #1f1f1f;
   }
 
   .srfsc-callout {
